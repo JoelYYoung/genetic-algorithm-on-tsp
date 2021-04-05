@@ -12,12 +12,6 @@ According to the real process of revoltion in which chromosomes exchange genes e
 
 ## Result
 
-![image](https://github.com/JoelYYoung/genetic-algorithm-on-tsp/tree/main/figure/fig1_initial_path.png)
-
-![image](https://github.com/JoelYYoung/genetic-algorithm-on-tsp/tree/main/figure/fig2_revolved_path.png)
-
-![image](https://github.com/JoelYYoung/genetic-algorithm-on-tsp/tree/main/figure/fig1_initial_path.png)
-
 <img src="https://github.com/JoelYYoung/genetic-algorithm-on-tsp/tree/main/figure/fig1_initial_path.png" alt="fig1_initial_path" style="zoom:50%;" />
 
 <img src="https://github.com/JoelYYoung/genetic-algorithm-on-tsp/tree/main/figure/fig2_revolved_path.png" alt="fig2_revolved_path" style="zoom:50%;" />
