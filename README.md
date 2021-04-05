@@ -12,8 +12,14 @@ According to the real process of revoltion in which chromosomes exchange genes e
 
 ## Result
 
-<img src="https://github.com/JoelYYoung/genetic-algorithm-on-tsp/tree/main/figure/fig1_initial_path" alt="fig1_initial_path" style="zoom:50%;" />
+![image](https://github.com/JoelYYoung/genetic-algorithm-on-tsp/tree/main/figure/fig1_initial_path.png)
 
-<img src="https://github.com/JoelYYoung/genetic-algorithm-on-tsp/tree/main/figure/fig2_revolved_path" alt="fig2_revolved_path" style="zoom:50%;" />
+![image](https://github.com/JoelYYoung/genetic-algorithm-on-tsp/tree/main/figure/fig2_revolved_path.png)
 
-<img src="https://github.com/JoelYYoung/genetic-algorithm-on-tsp/tree/main/figure/fig3_dynamic_score" alt="fig3_dynamic_score" style="zoom:50%;" />
+![image](https://github.com/JoelYYoung/genetic-algorithm-on-tsp/tree/main/figure/fig1_initial_path.png)
+
+<img src="https://github.com/JoelYYoung/genetic-algorithm-on-tsp/tree/main/figure/fig1_initial_path.png" alt="fig1_initial_path" style="zoom:50%;" />
+
+<img src="https://github.com/JoelYYoung/genetic-algorithm-on-tsp/tree/main/figure/fig2_revolved_path.png" alt="fig2_revolved_path" style="zoom:50%;" />
+
+<img src="https://github.com/JoelYYoung/genetic-algorithm-on-tsp/tree/main/figure/fig3_dynamic_score.png" alt="fig3_dynamic_score" style="zoom:50%;" />
