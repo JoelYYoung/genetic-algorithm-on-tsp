@@ -6,51 +6,37 @@ MAPWIDTH = 100 # 地图的宽度
 MAPLEN = 200 # 地图的长度
 
 class Path:
-    '''represent hamiltonian cycle
+    '''represent hamiltonian cycle.
 
     attributes:
     num(int):num of existing edges
     path(list):sequence of city ID listed in city_map
+    city_map(CityMap):related map of cities
     '''
     def __init__(self, city_map, path_list=[]):
         self.num = city_map.num
         self.city_map = city_map
         if len(path_list) == 0:
-            self.path = random.shuffle(list(range(self.num)))
+            self.path = list(range(self.num))
+            random.shuffle(self.path)
         else:
             self.path = path_list.copy()
 
-    def add_vertex(self, ID):
-        '''添加新的城市到列表中，表示一条路径。
-
-        args:
-        ID参数表示添加城市的编号，位于(1~num)的范围中。
-        如果ID重复或者num = 总数，就不继续添加'''
-        if ID in self.path:
-            return 0
-        else:
-            self.path.append(ID)
-            self.num += 1
-
-    def get_distance(self, city_map):
-        '''统计当前的路径的总距离。
-
-        city_map参数是当前的路径所在的地图上。'''
+    def get_distance(self):
+        '''return total distance of the cycle.'''
         distance = 0
         for i in range(self.num):
-            distance += city_map.map[self.path[i]][self.path[(i+1)%self.num]]
+            distance += self.city_map.map[self.path[i]][self.path[(i+1)%self.num]]
         return distance
 
-    def combine_path(self, partner):
-        '''两条路径进行交叉。
+    def crossover_path(self, partner):
+        '''crossover with partner and return nothing.
 
-        partner表示进行交叉的另一条路径。'''
+        args:
+        partner(Path):path to crossover with
+        '''
         min = random.randint(0, self.num-1)
         max = random.randint(min, self.num-1)
-        #print("min:", min, "max:", max)
-        #print("before:")
-        #print(self.path)
-        #print(partner.path)
         self.path[min: max+1], partner.path[min: max+1] = \
         partner.path[min: max+1], self.path[min: max+1]
         # 交换去重
@@ -66,10 +52,9 @@ class Path:
                         ptn_s += 1
                         break
                     ptn_s += 1
-        #print("after:")
-        #print(self.path)
-        #print(partner.path)
+
 class CityMap:
+    '''representation of graph of cities.'''
     def __init__(self, num):
         self.num = num
         # 产生一个初始的城市地图，采用邻接矩阵来存储
@@ -85,54 +70,68 @@ class CityMap:
                                           self.city[j])
 
 class Group:
+    '''representation of Group in revolution.'''
+
     def __init__(self, city_map, init_size):
-        '''种群类。
+        '''constructor of Group class.
         
-        传入参数city_map，根据这个地图，生成初始的种群。
-        通过num参数可以设置处置种群的大小。'''
+        args:
+        city_map(CityMap):city_map that the group is based on
+        init_size(int):initial size of group
+        '''
         self.city_map = city_map # 委托模式，仅仅是一个引用而不是新的对象
+        self.init_size = init_size
         self.path = [Path(city_map) for i in range(init_size)]
 
-    def score(self, save_rate=1):
-        '''为每个path打分。
+    def score(self, save_rate=1.0):
+        '''evaluate every path in the group and return a list of score.
 
-        通过save_rate可以调节最高的留存概率。'''
+        args:
+        save_rate(float):highest surviving possibility
+        '''
         result = []
-        for i in range(len(self.path)):
-            result.append(float(1)/self.path[i].get_distance(self.city_map))
+        for i in range(self.init_size):
+            result.append(float(1)/self.path[i].get_distance())
         max_possibility = max(result)
         result = [i / max_possibility * save_rate for i in result]
         return result
 
     def revolve(self, variation_rate):
+        '''implement revolution.
+        
+        args:
+        variation_rate(float):ratio of variate genes
+        '''
+        variation_rate = int(variation_rate * self.city_map.num)
         score = self.score()
         max_index = score.index(max(score))
         result = []
-        for i in range(len(self.path)):
+        for i in range(self.init_size):
             if random.random() > score[i]: # 把这一项变异掉
                 list = self.path[max_index].path.copy()
                 for i in range(variation_rate):
                     a = random.randrange(0, self.city_map.num)
                     b = random.randrange(0, self.city_map.num)
                     list[a], list[b] = list[b], list[a]
-                self.path[i] = Path(list)
+                self.path[i] = Path(self.city_map, list)
                 result.append(0)
             else:
                 result.append(1)
         good_index = [i[0] for i in enumerate(result) if i[1] == 1]
         random.shuffle(good_index)
         for i in range(int(len(good_index)/2)):
-            self.path[good_index[2*i]].combine_path(self.path[good_index[2*i+1]])
-        #print("after revolution:")
-        #for i in self.path:
-            #print(i.path)
-            
+            self.path[good_index[2*i]].crossover_path(self.path[good_index[2*i+1]])
 
-    def show_map(self, choice=0):
-        '''显示出当前的某个图片。
+    def show(self, choice=0):
+        '''display path as a matplotlib pic.
         
-        如果choice为0，那么展示最近的。
-        否则展示choice指定的路径。'''
+        args:
+        choice(int):choose the path to display
+
+        note:
+        if choice missing then display the shortest path in the group.
+        parameter choice should be within the range of 0~num or will arise Exception.
+        '''
         if(choice == 0):
             score = self.score()
             choice = score.index(max(score))
@@ -153,28 +152,23 @@ class Group:
         plt.show()
 
 def distance(city1, city2):
+    '''caculate and return distance between two cities.'''
     return math.sqrt(math.pow(city1[0]-city2[0], 2)+math.pow(city1[1]-city2[1], 2))
 
 if __name__== '__main__':
     init_size = 1000
-    epoch = 200
+    epoch = 20
+
     city_map = CityMap(100)
-    # print("city is", city_map.city)
-    # print("map is", city_map.map)
     group = Group(city_map, init_size)
     result = []
-    group.show_map()
-    # for i in range(len(group.path)):
-    #     print("path is", group.path[i].path)
-    #     print("length is", group.path[i].get_di stance(city_map))
+    group.show()
     for i in range(epoch):
         group.revolve(10)
         score = group.score(0.8)
-        # for i in range(len(group.path)):
-        #     print("length is", group.path[i].get_distance(city_map))
-        min_length = group.path[score.index(max(score))].get_distance(city_map)
+        min_length = group.path[score.index(max(score))].get_distance()
         print("min length:", min_length)
         result.append(min_length)
-    group.show_map()
+    group.show()
     plt.plot(result)
     plt.show()
