@@ -12,4 +12,4 @@ According to the real process of revoltion in which chromosomes exchange genes e
 
 ## Result
 
-[evaluation on coreutils 6.10](https://github.com/JoelYYoung/genetic-algorithm-on-tsp/blob/837af1dc659ddd0eb6a3d627ec5107d7984fc031/coreutils_6.10.html)
+[evaluation on coreutils 6.10](https://joelyyoung.github.io/genetic-algorithm-on-tsp/coreutils_6.10.html)
